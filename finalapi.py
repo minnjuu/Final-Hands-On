@@ -12,6 +12,7 @@ app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 mysql = MySQL(app)
 
+#data fetcher
 def data_fetch(query):
     cur = mysql.connection.cursor()
     cur.execute(query)
@@ -21,22 +22,66 @@ def data_fetch(query):
     data = [{k: v.decode() if isinstance(v, bytes) else v for k, v in item.items()} for item in data]
     return data
 
-
+#index page
 @app.route("/")
-def hello_world():
-    return "<p>Hello, World!</p>"
+def home_page():
+    return """
+    <form action="/customers" method="post">
+        <input type="text" name="query" placeholder="Enter your search query">
+        <input type="submit" value="Search">
+    </form>
+    """
 
+#error handler
+@app.errorhandler(404)
+def not_found_error(error):
+    return 
 
-
+#all customers
 @app.route("/customers", methods=["GET"])
 def get_customers():
-    cur = mysql.connection.cursor()
-    query = """select * from customers;"""
-    cur.execute(query)
+    query = """SELECT id, first_name, last_name, job_title, address, city FROM customers;"""
     data = data_fetch(query)
-    cur.close()
     return make_response(jsonify(data), 200)
 
+#customer id
+@app.route("/customers/<int:id>", methods=["GET"])
+def get_customer_by_id(id):
+    query = f"""SELECT id, first_name, last_name, job_title, address, city FROM customers WHERE id = {id};"""
+    data = data_fetch(query)
+    if data == []:
+        return make_response(jsonify(f"Customer {id} has no record in this table"), 404)
+    return make_response(jsonify(data), 200)
 
-if __name__ == "__main__":
+#customer orders
+@app.route("/customers/<int:id>/orders", methods = ["GET"])
+def get_customer_orders(id):
+    query = f"""SELECT concat(customers.first_name, " ", customers.last_name) as "Customer",
+orders.order_date, 
+products.product_name
+FROM products
+INNER JOIN order_details
+ON products.id = order_details.product_id
+INNER JOIN orders
+ON order_details.order_id = orders.id
+INNER JOIN customers
+ON orders.customer_id = customers.id
+WHERE customer_id = {id}
+ORDER by orders.order_date;"""
+    data = data_fetch(query)
+    if data == []:
+        return make_response(jsonify(f"Customer {id} has no recorded orders"), 404)
+    return make_response(jsonify(data), 200)
+
+#customer city
+@app.route("/customers/<string:city>", methods = ["GET"])
+def get_customers_by_city(city):
+    query = f"""SELECT id, first_name, last_name, job_title, address, city FROM customers
+    WHERE city = {city};"""
+    data = data_fetch(query)
+    if data == []:
+        return make_response(jsonify(f"No recorded customers for this City"), 404)
+    return make_response(jsonify(data), 200)
+
+if __name__ == "__main__""":
     app.run(debug=True)
