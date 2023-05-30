@@ -33,9 +33,11 @@ def home_page():
     """
 
 #error handler
+'''
 @app.errorhandler(404)
 def not_found_error(error):
-    return 
+    return True
+'''
 
 #all customers
 @app.route("/customers", methods=["GET"])
@@ -56,7 +58,8 @@ def get_customer_by_id(id):
 #customer orders
 @app.route("/customers/<int:id>/orders", methods = ["GET"])
 def get_customer_orders(id):
-    query = f"""SELECT concat(customers.first_name, " ", customers.last_name) as "Customer",
+    query = f"""SELECT customers.id, 
+concat(customers.first_name, " ", customers.last_name) as "Customer",
 orders.order_date, 
 products.product_name
 FROM products
@@ -69,9 +72,11 @@ ON orders.customer_id = customers.id
 WHERE customer_id = {id}
 ORDER by orders.order_date;"""
     data = data_fetch(query)
+    orders = [{"product_name": item["product_name"],"order_date": item["order_date"]} for item in data]
+    result = {"Customer Id": data[0]['id'], "Customer Name": data[0]['Customer'], "No. of Orders": len(data), "Orders": orders}
     if data == []:
         return make_response(jsonify(f"Customer {id} has no recorded orders"), 404)
-    return make_response(jsonify(data), 200)
+    return make_response(jsonify(result), 200)
 
 #customer city
 @app.route("/customers/<string:city>", methods = ["GET"])
@@ -82,6 +87,18 @@ def get_customers_by_city(city):
     if data == []:
         return make_response(jsonify(f"No recorded customers for this City"), 404)
     return make_response(jsonify(data), 200)
+
+@app.route("/customers/<int:id>", methods=["DELETE"])
+def delete_customer(id):
+    query = f""" DELETE FROM customers WHERE id = {id} """
+    mysql.connection.commit()
+    rows_affected = cur.rowcount
+    cur.close()
+    return make_response(
+        jsonify(
+            {"message": "Customer deleted successfully", "rows_affected": rows_affected}), 200,
+    )
+
 
 if __name__ == "__main__""":
     app.run(debug=True)
