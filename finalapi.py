@@ -87,7 +87,7 @@ def get_customers_by_city(city):
     data = data_fetch(query)
     result = {"City": data[0]['city'], "Customer Count": len(data), "List of Customers": data}
     if data == []:
-        return make_response(jsonify(f"No recorded customers for this City"), 404)
+        return make_response(jsonify("No recorded customers for this City"), 404)
     return make_response(jsonify(result), 200)
 
 @app.route("/customers", methods=["POST"])
@@ -105,7 +105,7 @@ def add_customer():
 
     data = data_fetch(query)
     mysql.connection.commit()
-    return make_response(jsonify({"Customer added successfully"}),201,)
+    return make_response(jsonify({"message":"Customer added successfully"}),201,)
 
 @app.route("/customers/<int:id>", methods=["DELETE"])
 def delete_customer(id):
