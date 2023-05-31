@@ -26,7 +26,7 @@ def data_fetch(query):
 @app.route("/")
 def home_page():
     return """
-    <form action="/customers" method="post">
+    <form action="/customers" method="GET">
         <input type="text" name="query" placeholder="Enter your search query">
         <input type="submit" value="Search">
     </form>
@@ -42,14 +42,15 @@ def not_found_error(error):
 #all customers
 @app.route("/customers", methods=["GET"])
 def get_customers():
-    query = """SELECT id, first_name, last_name, job_title, address, city FROM customers;"""
+    query = """SELECT id, company,  first_name, last_name, job_title, address, city FROM customers;"""
     data = data_fetch(query)
     return make_response(jsonify(data), 200)
 
 #customer id
 @app.route("/customers/<int:id>", methods=["GET"])
 def get_customer_by_id(id):
-    query = f"""SELECT id, first_name, last_name, job_title, address, city FROM customers WHERE id = {id};"""
+    query = f"""SELECT id, company,
+     first_name, last_name, job_title, address, city FROM customers WHERE id = {id};"""
     data = data_fetch(query)
     if data == []:
         return make_response(jsonify(f"Customer {id} has no record in this table"), 404)
@@ -81,23 +82,37 @@ ORDER by orders.order_date;"""
 #customer city
 @app.route("/customers/<string:city>", methods = ["GET"])
 def get_customers_by_city(city):
-    query = f"""SELECT id, first_name, last_name, job_title, address, city FROM customers
+    query = f"""SELECT id, company, first_name, last_name, job_title, address, city FROM customers
     WHERE city = {city};"""
     data = data_fetch(query)
+    result = {"City": data[0]['city'], "Customer Count": len(data), "List of Customers": data}
     if data == []:
         return make_response(jsonify(f"No recorded customers for this City"), 404)
-    return make_response(jsonify(data), 200)
+    return make_response(jsonify(result), 200)
+
+@app.route("/customers", methods=["POST"])
+def add_customer():
+    info = request.get_json()
+    company = info["company"]
+    first_name = info["first_name"]
+    last_name = info["last_name"]
+    job_title = info["job_title"]
+    address = info["address"]
+    city = info["city"]
+
+    query = f"""INSERT INTO customers (company, first_name, last_name, job_title, address, city)
+            VALUES ('{company}', '{first_name}', '{last_name}', '{job_title}', '{address}', '{city}')"""
+
+    data = data_fetch(query)
+    mysql.connection.commit()
+    return make_response(jsonify({"Customer added successfully"}),201,)
 
 @app.route("/customers/<int:id>", methods=["DELETE"])
 def delete_customer(id):
-    query = f""" DELETE FROM customers WHERE id = {id} """
+    query = f""" DELETE FROM customers WHERE id = {id}; """
+    data_fetch(query)
     mysql.connection.commit()
-    rows_affected = cur.rowcount
-    cur.close()
-    return make_response(
-        jsonify(
-            {"message": "Customer deleted successfully", "rows_affected": rows_affected}), 200,
-    )
+    return make_response(jsonify(f"Customer {id} records has been successfully deleted"), 200)
 
 
 if __name__ == "__main__""":
