@@ -132,7 +132,7 @@ echo [2] XML
 choice /c 12 /N
 if %ERRORLEVEL% == 1 (
 	cls
-    curl  -X GET http://127.0.0.1:5000/customers%o_id%/orders
+    curl  -X GET http://127.0.0.1:5000/customers/%o_id%/orders
 	pause
     goto ret_end
 )
