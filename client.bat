@@ -160,7 +160,6 @@ choice /c 12 /N
 if %ERRORLEVEL% == 1 (
 	cls
     curl -X GET "http://127.0.0.1:5000/customers/'!encodedCity!'"
-pause
 	pause
     goto ret_end
 )
@@ -179,6 +178,7 @@ if %ERRORLEVEL% == 1 goto retrieve
 if %ERRORLEVEL% == 2 goto main
 
 :add
+cls
 set /p "company=Enter company name: "
 set /p "first_name=Enter first name: "
 set /p "last_name=Enter last name: "
@@ -214,6 +214,7 @@ if %ERRORLEVEL% == 1 goto add
 if %ERRORLEVEL% == 2 goto main
 
 :delete
+cls
 set /p "d_id=Enter Customer ID: "
 if "%d_id%"=="" (
     echo Customer ID cannot be empty
@@ -238,6 +239,7 @@ if %ERRORLEVEL% == 1 goto delete
 if %ERRORLEVEL% == 2 goto main
 
 :update
+cls
 set /p "u_id=Enter Customer ID: "
 if "%u_id%"=="" (
     echo Customer ID cannot be empty
