@@ -1,5 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
+start "CRUD API" cmd /k "python finalapi.py"
+
 
 :main
 cls
@@ -290,4 +292,5 @@ if %ERRORLEVEL% == 2 goto main
 
 :end
 echo Hava Nice One Mate!
+echo Please Make Sure to Close the API, if you're not using it
 pause
