@@ -1,5 +1,5 @@
 # Final-Hands-On
-North Wind CRUD api
+NorthWind CRUD API
 NOTE!: Make sure you have installed Python on your PC, to check simply type "python" on your terminal
 PS: Make sure to also have your MySQL workbench installed and have the Northwind database imported. (I have provided it along with the other files.)
 
@@ -12,7 +12,7 @@ pip install flask flask-mysqldb
 
 This command installs flask and flaskMySQLdb to your PC. (modules used by the api script)
 
-2. Configure your MySQL Server, ensure that the database configuration in the script (MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) matches the database setup on your pc (or else you wont be given access to interact with the table).
+2. Configure your MySQL Server, ensure that the database configuration in the api script (MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) matches the database setup on your PC (or else you wont be given access to interact with the table).
 
 3. Locate the client.bat file, and run it. The batch file also runs the api script so you dont need to open it before running the client script. In case it cannot connect to the server, you can manually run the finalapi.py file.
 
