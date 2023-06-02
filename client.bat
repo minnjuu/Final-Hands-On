@@ -2,6 +2,7 @@
 setlocal enabledelayedexpansion
 
 :main
+cls
 curl  http://127.0.0.1:5000/
 
 choice /c 1234e /N
@@ -30,6 +31,7 @@ if %ERRORLEVEL% == 5 (
 goto end
 
 :retrieve
+cls
 echo SELECT OPERATION
 echo [1] Retrieve ALL Customers        
 echo [2] Search Customer 
@@ -55,10 +57,22 @@ if %ERRORLEVEL% == 4 (
 	goto city
 )
 :all
-curl  http://127.0.0.1:5000/customers
-pause
-cls
-goto ret_end
+echo SELECT FORMAT
+echo [1] JSON       
+echo [2] XML 
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
+	cls
+    curl  http://127.0.0.1:5000/customers
+	pause
+    goto ret_end
+)
+if %ERRORLEVEL% == 2 (
+	cls
+	curl  http://127.0.0.1:5000/customers?format=xml
+    pause
+    goto ret_end
+)
 
 
 :search
@@ -77,10 +91,22 @@ if %s_id% EQU %valid_sid% (
     goto search
 )
 :cst_srch
-curl  http://127.0.0.1:5000/customers/%s_id%
-pause
-cls
-goto ret_end
+echo SELECT FORMAT
+echo [1] JSON       
+echo [2] XML 
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
+	cls
+    curl  -X GET http://127.0.0.1:5000/customers/%s_id%
+	pause
+    goto ret_end
+)
+if %ERRORLEVEL% == 2 (
+	cls
+	curl  -X GET http://127.0.0.1:5000/customers/%s_id%?format=xml
+    pause
+    goto ret_end
+)
 
 :orders
 set /p "o_id=Enter Customer ID: "
@@ -98,10 +124,23 @@ if %o_id% EQU %valid_oid% (
     goto orders
 )
 :cst_ord
-curl  http://127.0.0.1:5000/customers/%o_id%/orders
-pause
-cls
-goto ret_end
+echo SELECT FORMAT
+echo [1] JSON       
+echo [2] XML 
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
+	cls
+    curl  -X GET http://127.0.0.1:5000/customers%o_id%/orders
+	pause
+    goto ret_end
+)
+if %ERRORLEVEL% == 2 (
+	cls
+	curl  -X GET http://127.0.0.1:5000/customers/%o_id%/orders?format=xml
+    pause
+    goto ret_end
+)
+
 :city
 set /p "city=Enter city: "
 rem Validate input (city cannot be empty)
@@ -112,8 +151,23 @@ if "%city%"=="" (
 )
 
 set "encodedCity=!city: =%%20!"
-curl -X GET "http://127.0.0.1:5000/customers/'!encodedCity!'"
+echo SELECT FORMAT
+echo [1] JSON       
+echo [2] XML 
+choice /c 12 /N
+if %ERRORLEVEL% == 1 (
+	cls
+    curl -X GET "http://127.0.0.1:5000/customers/'!encodedCity!'"
 pause
+	pause
+    goto ret_end
+)
+if %ERRORLEVEL% == 2 (
+	cls
+	curl -X GET "http://127.0.0.1:5000/customers/'!encodedCity!'?format=xml"
+    pause
+    goto ret_end
+)
 
 :ret_end
 cls
