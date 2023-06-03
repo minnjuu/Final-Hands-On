@@ -224,16 +224,24 @@ if "%d_id%"=="" (
 set /a valid_did=%d_id%
 if %d_id% EQU %valid_did% (
     goto del
+    
 ) else (
     echo Invalid Customer ID
     pause
     goto delete
 )
 :del
+curl -X GET http://127.0.0.1:5000/customers/%d_id%
+echo Continue?
+choice /c yn 
+if %ERRORLEVEL% == 1 goto del_con
+if %ERRORLEVEL% == 2 goto delete
+
+:del_con
 curl -X DELETE http://127.0.0.1:5000/customers/%d_id%
 pause
 cls
-echo Run Again?
+echo Run Again?s
 choice /c yn
 if %ERRORLEVEL% == 1 goto delete
 if %ERRORLEVEL% == 2 goto main
@@ -248,12 +256,18 @@ if "%u_id%"=="" (
 )
 set /a valid_uid=%u_id%
 if %u_id% EQU %valid_uid% (
-    goto u_details
+    goto u_confirm
 ) else (
     echo Invalid Customer ID
     pause
     goto update
 )
+:u_confirm
+curl -X GET http://127.0.0.1:5000/customers/%u_id%
+echo Continue?
+choice /c yn 
+if %ERRORLEVEL% == 1 goto u_details
+if %ERRORLEVEL% == 2 goto update
 
 :u_details
 echo Enter Customer Details for Updating

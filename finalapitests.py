@@ -53,8 +53,7 @@ class MyAppTests(unittest.TestCase):
         self.assertTrue("Grilo" in response.data.decode())
     
     def test_get_customers_by_city_not_found(self):
-        city = "Atlantis City"
-        response = self.app.get(f"/customers/{city}")
+        response = self.app.get(f"/customers/'Atlantis City'")
         self.assertEqual(response.status_code, 404) 
 
     def test_add_customer(self):
@@ -94,7 +93,7 @@ class MyAppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
     
     def test_delete_customer(self):
-        response = self.app.delete("/customers/48")
+        response = self.app.delete("/customers/57")
         self.assertEqual(response.status_code, 200)
 
     def test_delete_customer_non_existing(self):
