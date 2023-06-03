@@ -12,11 +12,8 @@ pip install flask flask-mysqldb
 
 This command installs flask and flaskMySQLdb to your PC. (modules used by the api script)
 
-<<<<<<< HEAD
-2. Configure your MySQL Server,after that open the finalapi.py script and ensure that the database configuration in the script (MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) matches the database setup on your pc (or else you wont be given access to interact with the table).
-=======
-2. Configure your MySQL Server, ensure that the database configuration in the api script (MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) matches the database setup on your PC (or else you wont be given access to interact with the table).
->>>>>>> 1204fffb2c351892e66e994b7f27a64b6a1b452b
+2. Configure your MySQL Server, after that open the finalapi.py script and ensure that the database configuration in the script (MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) matches the database setup on your pc (or else you wont be given access to interact with the table).
+
 
 3. Locate the client.bat file, and run it. The batch file also runs the api script so you dont need to open it before running the client script. In case it cannot connect to the server, you can manually run the finalapi.py file.
 
