@@ -25,8 +25,6 @@ def data_fetch(query):
     data = [{k: v.decode() if isinstance(v, bytes) else v for k, v in item.items()} for item in data]
     return data
 
-import xml.dom.minidom
-
 def generate_xml_response(data_list, root_element="root"):
     root = ET.Element(root_element)
     for data in data_list:
@@ -57,12 +55,6 @@ def home_page():
     [E] Exit
     """, mimetype="text/plain")
 
-#error handler
-'''
-@app.errorhandler(404)
-def not_found_error(error):
-    return True
-'''
 
 #all customers
 @app.route("/customers", methods=["GET"])

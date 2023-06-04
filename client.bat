@@ -243,7 +243,7 @@ if %ERRORLEVEL% == 2 goto delete
 curl -X DELETE http://127.0.0.1:5000/customers/%d_id%
 pause
 cls
-echo Run Again?s
+echo Run Again?
 choice /c yn
 if %ERRORLEVEL% == 1 goto delete
 if %ERRORLEVEL% == 2 goto main
