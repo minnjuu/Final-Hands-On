@@ -5,6 +5,8 @@ start "CRUD API" cmd /k "python finalapi.py"
 
 :main
 cls
+timeout /t 5 /nobreak
+cls
 curl  http://127.0.0.1:5000/
 
 choice /c 1234e /N
