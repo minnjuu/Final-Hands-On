@@ -2,10 +2,8 @@
 setlocal enabledelayedexpansion
 start "CRUD API" cmd /k "python finalapi.py"
 
-
-:main
-cls
 timeout /t 5 /nobreak
+:main
 cls
 curl  http://127.0.0.1:5000/
 
